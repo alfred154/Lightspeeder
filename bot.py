@@ -120,7 +120,7 @@ def load_handbook():
     HANDBOOK_SECTIONS.extend(load_file_sections("Lightspeed_Handbook.txt", "employee"))
 
     # Manager handbook
-    HANDBOOK_SECTIONS.extend(load_file_sections("Manager Lightspeed Handbook.txt", "manager"))
+    HANDBOOK_SECTIONS.extend(load_file_sections("Manager_Lightspeed_Handbook.txt", "manager"))
 
     print(f"Total sections loaded: {len(HANDBOOK_SECTIONS)}")
 
