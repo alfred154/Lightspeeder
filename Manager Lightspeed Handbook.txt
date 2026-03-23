@@ -1,0 +1,261 @@
+Lightspeed Handbook
+FOR ASM, SM, & DMs
+
+Inventory Adjustments (Broken, stolen, or expired)
+
+If something is broken, stolen, used, or expires you must remove it from your store’s inventory. 
+
+Step-by-Step:
+1. From the Sell screen, tap the menu icon (☰) in the upper left
+2. Select Dashboard
+3. On the Dashboard screen, tap the menu icon again (upper left)
+4. Navigate to Catalog > Products
+5. Search for the product that is broken, stolen, used, or expired 
+6. Touch the arrow to the left of the product to show a dropdown
+7. Touch “Adjust inventory”
+8. Choose the store where the product must be adjusted
+9. Change the “Adjustment reason” to match why it’s being removed 
+
+from inventory
+
+10. Mark how many need to be removed
+11. Press “Adjust inventory” and the action will be complete. 
+
+Inventory Workflow
+
+1.
+2.
+3.
+
+4.
+5.
+6.
+7.
+
+8.
+9.
+10.
+11.
+12.
+
+DM initiates (starts) a stock transfer in Lightspeed. 
+DM informs management at the store of the 4 digit alphanumeric code and the due date. 
+ASM/SM scans or searches for products and adjusts the quantity. Quantity is for sellable products, not necessarily the 
+box it comes in.  
+Example: You will ask for 5 coils, not 1 box of 5 coils. 
+The SM will save the transfer and inform the DM that it is complete. 
+The transfer will turn red when it is no longer editable. 
+The warehouse team will print, input, and cancel the transfer. 
+The warehouse team will initiate a new transfer with the same alphanumeric code to match exactly what is being 
+packed. 
+The warehouse team will send the transfer and a blue icon will appear to the right of the transfer. 
+The boxes will be delivered. The staff must ensure that the invoice matches what was delivered. 
+The staff will inform the ASM, SM, or DM of the delivery. 
+The ASM, SM, or DM will receive the inventory in the system.
+The transfer is complete. 
+
+Inventory For DM
+
+Tap the menu icon (☰) in the upper left.
+Touch “Dashboard”
+Touch the two boxes 
+Touch “Stock control”
+Touch “Transfers”
+Touch the button “Transfer stock”
+Source outlet should be “Warehouse” and the Destination outlet is the store 
+that will be receiving the inventory for normal “inventory.” 
+Source outlet should be the store you are removing products from and the 
+destination is the store where the products will be delivered to. 
+Remove everything from the reference except the 4 digit alphanumeric code. 
+Add the following in these formats:
+EXAMPLE NAME: Inventory Request H8JM Jeremiah Maddix  
+EXAMPLE NAME: Tobacco Request H8JM Jeremiah Maddix 
+EXAMPLE NAME: Supplies Request H8JM  Jeremiah Maddix 
+EXAMPLE NAME: Taxi Jeremiah Maddix 
+Enter the date that the transfer will not longer be editable by the store management. 
+You will leave “Choose products” selected. 
+In the field under “Product” you will search or scan items that you need in the store and adjust the quantity to the number of required item. 
+Add “INVENTORY PLACEHOLDER” as the only item. 
+Press “save.”
+NEVER “SEND” a transfer. That is what the warehouse does. 
+
+Inform the store’s management of the unique alphanumeric code so they can add what is needed at the store in the inventory chat.
+
+Inventory For ASM/SM (Starting a list)
+
+Tap the menu icon (☰) in the upper left.
+Touch “Dashboard”
+Touch the two boxes 
+Touch “Stock control”
+Touch “Transfers”
+Touch the button “Transfer stock”
+Search / find the transfer the DM has initiated. 
+They will provide the alphanumeric code / name of the transfer. 
+You will leave the button “Choose products” selected. 
+A blue box will be surrounding this large button. 
+In the field under “Product” you will search or scan items that you 
+need in the store and adjust the quantity to the number of required item. 
+Keep adding items until you have completed your list. You can “Save” any time and go back to it. 
+
+Press “save” and inform your DM. 
+You can NOT edit the transfer once it turns red in the system. 
+NEVER, “SEND” a transfer. That is what the warehouse does. 
+
+You are done. The only thing you will do is save the stock transfer. Inform your DM that the list is complete in the inventory 
+chat. 
+
+Inventory For ASM/SM (Receiving Inventory)
+
+Tap the menu icon (☰) in the upper left.
+Touch “Dashboard”
+Touch the two boxes 
+Touch “Stock control”
+Touch “Transfers”
+Search / find the transfer the warehouse has initiated. 
+It will be the same alphanumeric code / name of the original transfer. 
+EACH request will have a novel (new) alphanumeric code. 
+You will choose that transfer and touch “receive”. 
+Keep adding items until you have completed your list. 
+You can “Save” any time and go back to it. 
+
+Press “save” and inform your DM. 
+You can NOT edit the transfer once it turns red in the system. 
+NEVER, “SEND” a transfer. That is what the warehouse does. 
+
+You are done. The only thing you will do is save the stock transfer. Inform your DM that the list is complete. 
+
+SOP: Tobacco Stock Transfer (Lightspeed Retail X)
+
+Phase 1: Preparation (Post-Delivery)
+
+1.
+2.
+
+Receive the Tobacco: Physically accept the delivery. 
+Verify the Packing Slip: Ensure you have the physical paperwork from the driver/warehouse.
+
+Phase 2: Create the Transfer 
+
+Even though the product is already in the building, you must create the 
+request in the system to "pull" the inventory into your store's data.
+
+1.
+2.
+3.
+4.
+5.
+6.
+
+Log in to Lightspeed Retail (X).
+Navigate to Inventory > Stock Transfers.
+Click Create Stock Transfer.
+Source Outlet: Select Warehouse (or the sending location).
+Destination Outlet: Select Your Store Name.
+Scan Products: Scan every individual carton or pack received.
+
+○
+○
+
+Note: Ensure you are scanning the correct variant (e.g., Marlboro Red vs. Marlboro Red 100s).
+Do NOT scan damaged products that will not be sold. You will post these products in Discord as defective and tag 
+@lightspeed, @warehouse, and your DM.
+
+7.
+
+Click Save.
+
+SOP: Tobacco Stock Transfer (Lightspeed Retail X)
+
+Phase 3: Sending the Transfer
+
+This step confirms that the items have "left" the warehouse digitally.
+
+1.
+2.
+3.
+4.
+
+Open the transfer you just created.
+Review the quantities to ensure they match the physical tobacco on your counter.
+Click Send Transfer.
+The status will change to In Transit.
+
+Phase 4: Receiving the Inventory
+
+This is the final step that officially adds the tobacco to your "On Hand" count so you can begin selling it.
+
+1.
+2.
+3.
+
+4.
+
+While still in the Stock Transfers screen, find the "In Transit" transfer.
+Click Receive.
+Check Quantities: Lightspeed will ask you to verify the amount received.
+
+○
+
+The physical count should always match the scan, click Receive All.
+
+Click Complete Transfer.
+
+⚠ Compliance & Troubleshooting
+
+Same video as previous slide.
+
+●
+
+●
+
+●
+
+Discord Documentation: Take a photo of the completed "Received" screen and the physical tobacco. Post it to the your store channel as per standard protocol 
+tagging @lightspeed, @warehouse, and your DM.
+The "No Sale" Rule: Never sell a pack of tobacco until the transfer status is Complete. 
+Damaged Items: If tobacco is received damaged, do not "Receive" those specific units. You will post these products in Discord as defective and tag @lightspeed, 
+@warehouse, and your DM.
+
+Changing ANYTHING / DO NOT GUESS
+
+DO NOT CHANGE ANYTHING.
+DO NOT ADD PRICES.
+DO NOT ADD BARCODES.
+DO NOT TRY TO FIX SOMETHING. 
+DO NOT DO ANYTHING WE DID NOT TRAIN YOU TO DO. 
+YOU WILL NOT PERFORM ANY COUNTS
+
+ASK QUESTIONS BEFORE YOU DO SOMETHING YOU HAVEN’T DONE BEFORE. 
+
+DO NOT GUESS!!!!
+
+Dejavoo Error” Payment – Proper Use Guide
+Occasionally, a customer may tap or insert their card too quickly.
+ In these cases, the terminal (card reader) processes the payment, 
+but Lightspeed remains stuck on the payment screen.
+If that happens:
+*Do not guess. Do not hit random buttons.*
+Incorrect actions can result in *double charges* or *lost revenue* for the store.
+
+Follow These Steps Exactly
+1. Print the small receipt from the Dejavoo terminal.
+This confirms the customer was actually charged.
+If you skip this, there’s no proof of payment and 
+the product  could walk out unpaid.
+2. Only after confirming payment, select “Dejavoo Error” 
+in Lightspeed to complete the transaction.
+3. After the sale is finalized:
+    📸 Take a photo of:
+     • The *Lightspeed receipt*, and
+     • The *Dejavoo receipt*
+
+4. Post both images in your store’s Discord channel.
+Tag *@accounting* and *@lightspeed* for reporting.
+
+🚨 This is not optional.
+Skipping any of these steps can result in loss and will lead 
+to disciplinary action.
+Thanks for handling this correctly and keeping operations 
+smooth.
+
+
