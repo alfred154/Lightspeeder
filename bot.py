@@ -6,6 +6,35 @@ import math
 import aiohttp
 
 # -------------------------------
+# LOAD LIGHTSPEED HANDBOOK
+# -------------------------------
+
+HANDBOOK_TEXT = ""
+
+if os.path.exists("Lightspeed Handbook.txt"):
+    with open("Lightspeed Handbook.txt", "r", encoding="utf-8") as f:
+        HANDBOOK_TEXT = f.read().lower()
+else:
+    HANDBOOK_TEXT = "handbook_missing"
+
+
+def search_handbook(keywords):
+    """Return the first matching section from the handbook."""
+    if HANDBOOK_TEXT == "handbook_missing":
+        return None
+
+    for kw in keywords:
+        if kw in HANDBOOK_TEXT:
+            # Return ~500 characters around the keyword
+            idx = HANDBOOK_TEXT.index(kw)
+            start = max(0, idx - 200)
+            end = min(len(HANDBOOK_TEXT), idx + 300)
+            return HANDBOOK_TEXT[start:end].strip()
+
+    return None
+
+
+# -------------------------------
 # LOCATION / DISTANCE UTILITIES
 # -------------------------------
 
@@ -29,7 +58,7 @@ async def geocode_location(query: str):
 def haversine(lat1, lon1, lat2, lon2):
     R = 3958.8
     dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
+    dlon = math.radians(lat2 - lon1)
     a = (
         math.sin(dlat / 2) ** 2 +
         math.cos(math.radians(lat1)) *
@@ -71,35 +100,21 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 def lightspeed_hardware_response(msg):
     msg = msg.lower()
 
+    # Search handbook first
     if "printer" in msg:
-        return (
-            "**Lightspeed Printer Troubleshooting**\n"
-            "1. Make sure the printer is powered on.\n"
-            "2. Check that the Ethernet cable is firmly connected.\n"
-            "3. Ensure the printer has a solid **green** status light.\n"
-            "4. On the iPad: Settings → Wi‑Fi → ensure you're on the store network.\n"
-            "5. In Lightspeed: Settings → Hardware → Printers → tap **Search for printers**.\n"
-            "6. If still offline, power‑cycle the printer.\n"
-        )
+        section = search_handbook(["printer", "receipt printer", "printing"])
+        if section:
+            return "**Lightspeed Printer Troubleshooting (from Handbook)**\n" + section
 
     if "scanner" in msg or "barcode" in msg:
-        return (
-            "**Lightspeed Barcode Scanner Troubleshooting**\n"
-            "1. Ensure the scanner is charged.\n"
-            "2. Hold the trigger for 10 seconds to reboot.\n"
-            "3. Make sure Bluetooth is connected to the scanner.\n"
-            "4. Test scanning into the Notes app.\n"
-            "5. If it types numbers slowly, disable keyboard mode.\n"
-        )
+        section = search_handbook(["scanner", "barcode"])
+        if section:
+            return "**Lightspeed Scanner Troubleshooting (from Handbook)**\n" + section
 
     if "cash drawer" in msg:
-        return (
-            "**Lightspeed Cash Drawer Troubleshooting**\n"
-            "1. Drawer only opens when the receipt printer fires.\n"
-            "2. Ensure the drawer cable is plugged into the printer.\n"
-            "3. Make sure the printer is online.\n"
-            "4. Try printing a test receipt.\n"
-        )
+        section = search_handbook(["cash drawer", "drawer"])
+        if section:
+            return "**Lightspeed Cash Drawer Troubleshooting (from Handbook)**\n" + section
 
     return None
 
@@ -112,39 +127,24 @@ def lightspeed_training_response(msg):
     msg = msg.lower()
 
     if "refund" in msg:
-        return (
-            "**How to Refund a Sale in Lightspeed**\n"
-            "1. Tap **Sales History**.\n"
-            "2. Select the transaction.\n"
-            "3. Tap **Refund**.\n"
-            "4. Choose the items to refund.\n"
-            "5. Complete the refund using the correct tender.\n"
-        )
+        section = search_handbook(["refund", "return"])
+        if section:
+            return "**Refund Instructions (from Handbook)**\n" + section
 
     if "reprint" in msg or "receipt" in msg:
-        return (
-            "**How to Reprint a Receipt**\n"
-            "1. Tap **Sales History**.\n"
-            "2. Select the sale.\n"
-            "3. Tap **Print Receipt**.\n"
-        )
+        section = search_handbook(["receipt", "reprint"])
+        if section:
+            return "**Receipt Instructions (from Handbook)**\n" + section
 
     if "void" in msg:
-        return (
-            "**How to Void a Sale**\n"
-            "1. Tap **Sales History**.\n"
-            "2. Select the sale.\n"
-            "3. Tap **Void Sale**.\n"
-            "4. Confirm.\n"
-        )
+        section = search_handbook(["void"])
+        if section:
+            return "**Void Instructions (from Handbook)**\n" + section
 
     if "clock" in msg:
-        return (
-            "**How to Clock In/Out**\n"
-            "1. Tap **More**.\n"
-            "2. Tap **Time Clock**.\n"
-            "3. Choose **Clock In** or **Clock Out**.\n"
-        )
+        section = search_handbook(["clock", "time clock"])
+        if section:
+            return "**Clock In/Out Instructions (from Handbook)**\n" + section
 
     return None
 
