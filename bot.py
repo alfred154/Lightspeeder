@@ -6,32 +6,92 @@ import math
 import aiohttp
 
 # -------------------------------
-# LOAD LIGHTSPEED HANDBOOK
+# LOAD & PARSE LIGHTSPEED HANDBOOK
 # -------------------------------
 
-HANDBOOK_TEXT = ""
+HANDBOOK_SECTIONS = {}
 
-if os.path.exists("Lightspeed Handbook.txt"):
-    with open("Lightspeed Handbook.txt", "r", encoding="utf-8") as f:
-        HANDBOOK_TEXT = f.read().lower()
-else:
-    HANDBOOK_TEXT = "handbook_missing"
+def load_handbook():
+    global HANDBOOK_SECTIONS
+    filename = "Lightspeed_Handbook.txt"
+    if not os.path.exists(filename):
+        print("Handbook file not found:", filename)
+        HANDBOOK_SECTIONS = {}
+        return
 
+    with open(filename, "r", encoding="utf-8") as f:
+        lines = f.read().splitlines()
 
-def search_handbook(keywords):
-    """Return the first matching section from the handbook."""
-    if HANDBOOK_TEXT == "handbook_missing":
+    sections = {}
+    current_title = None
+    current_lines = []
+
+    def is_header(line: str) -> bool:
+        line = line.strip()
+        if not line:
+            return False
+        if len(line) > 80:
+            return False
+        if any(line.startswith(ch) for ch in ("1.", "2.", "3.", "-", "*")):
+            return False
+        if "." in line:
+            return False
+        # treat as header if it has letters and spaces, no @ or :
+        if any(c.isalpha() for c in line) and all(c.isalnum() or c.isspace() or c in "&/" for c in line):
+            return True
+        return False
+
+    for line in lines:
+        if is_header(line):
+            # save previous section
+            if current_title and current_lines:
+                sections[current_title.lower()] = "\n".join(current_lines).strip()
+            current_title = line.strip()
+            current_lines = []
+        else:
+            if current_title:
+                current_lines.append(line)
+
+    if current_title and current_lines:
+        sections[current_title.lower()] = "\n".join(current_lines).strip()
+
+    HANDBOOK_SECTIONS = sections
+    print(f"Loaded {len(HANDBOOK_SECTIONS)} handbook sections.")
+
+def score_section(query: str, title: str, body: str) -> int:
+    q_words = [w for w in query.lower().split() if len(w) > 2]
+    text = (title + " " + body).lower()
+    score = 0
+    for w in q_words:
+        if w in text:
+            score += 2
+        if w in title.lower():
+            score += 3
+    return score
+
+def find_best_handbook_answer(query: str):
+    if not HANDBOOK_SECTIONS:
         return None
 
-    for kw in keywords:
-        if kw in HANDBOOK_TEXT:
-            # Return ~500 characters around the keyword
-            idx = HANDBOOK_TEXT.index(kw)
-            start = max(0, idx - 200)
-            end = min(len(HANDBOOK_TEXT), idx + 300)
-            return HANDBOOK_TEXT[start:end].strip()
+    best_title = None
+    best_body = None
+    best_score = 0
 
-    return None
+    for title, body in HANDBOOK_SECTIONS.items():
+        s = score_section(query, title, body)
+        if s > best_score:
+            best_score = s
+            best_title = title
+            best_body = body
+
+    if best_score == 0 or not best_body:
+        return None
+
+    # trim long responses a bit
+    if len(best_body) > 1200:
+        best_body = best_body[:1200] + "\n\n...(truncated)..."
+
+    return f"**{best_title.title()}**\n\n{best_body}"
 
 
 # -------------------------------
@@ -48,7 +108,7 @@ async def geocode_location(query: str):
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(url, params=params, headers={"User-Agent": "TesterBot"}) as resp:
+        async with session.get(url, params=params, headers={"User-Agent": "LightspeederBot"}) as resp:
             data = await resp.json()
             if not data:
                 return None
@@ -93,76 +153,18 @@ intents.message_content = True
 # ---- Bot Setup ----
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# -------------------------------
-# LIGHTSPEED HARDWARE TROUBLESHOOTING (A)
-# -------------------------------
 
-def lightspeed_hardware_response(msg):
-    msg = msg.lower()
-
-    # Search handbook first
-    if "printer" in msg:
-        section = search_handbook(["printer", "receipt printer", "printing"])
-        if section:
-            return "**Lightspeed Printer Troubleshooting (from Handbook)**\n" + section
-
-    if "scanner" in msg or "barcode" in msg:
-        section = search_handbook(["scanner", "barcode"])
-        if section:
-            return "**Lightspeed Scanner Troubleshooting (from Handbook)**\n" + section
-
-    if "cash drawer" in msg:
-        section = search_handbook(["cash drawer", "drawer"])
-        if section:
-            return "**Lightspeed Cash Drawer Troubleshooting (from Handbook)**\n" + section
-
-    return None
-
-
-# -------------------------------
-# LIGHTSPEED TRAINING ANSWERS (E)
-# -------------------------------
-
-def lightspeed_training_response(msg):
-    msg = msg.lower()
-
-    if "refund" in msg:
-        section = search_handbook(["refund", "return"])
-        if section:
-            return "**Refund Instructions (from Handbook)**\n" + section
-
-    if "reprint" in msg or "receipt" in msg:
-        section = search_handbook(["receipt", "reprint"])
-        if section:
-            return "**Receipt Instructions (from Handbook)**\n" + section
-
-    if "void" in msg:
-        section = search_handbook(["void"])
-        if section:
-            return "**Void Instructions (from Handbook)**\n" + section
-
-    if "clock" in msg:
-        section = search_handbook(["clock", "time clock"])
-        if section:
-            return "**Clock In/Out Instructions (from Handbook)**\n" + section
-
-    return None
-
-
-# ---- Events ----
 @bot.event
 async def on_ready():
-    print(f"Tester bot online as {bot.user}")
+    print(f"Lightspeeder bot online as {bot.user}")
+    load_handbook()
 
 
 @bot.event
 async def on_message(message):
-
     content_lower = message.content.lower()
 
-    # -----------------------------------------
     # DISTANCE QUERY
-    # -----------------------------------------
     if bot.user in message.mentions and "distance" in content_lower:
         try:
             cleaned = (
@@ -202,31 +204,28 @@ async def on_message(message):
             await message.reply(f"Error calculating distance: {e}")
             return
 
-    # -----------------------------------------
-    # LIGHTSPEED HARDWARE TROUBLESHOOTING (A)
-    # -----------------------------------------
-    if bot.user in message.mentions:
-        hardware = lightspeed_hardware_response(content_lower)
-        if hardware:
-            await message.reply(hardware)
+    # LIGHTSPEED Q&A (any question from handbook)
+    if bot.user in message.mentions and "distance" not in content_lower:
+        query = (
+            message.content
+            .replace(f'<@{bot.user.id}>', '')
+            .replace(f'<@!{bot.user.id}>', '')
+            .strip()
+        )
+
+        answer = find_best_handbook_answer(query)
+        if answer:
+            await message.reply(answer)
+            return
+        else:
+            await message.reply("I couldn't find anything in the Lightspeed handbook for that question.")
             return
 
-    # -----------------------------------------
-    # LIGHTSPEED TRAINING ANSWERS (E)
-    # -----------------------------------------
-    if bot.user in message.mentions:
-        training = lightspeed_training_response(content_lower)
-        if training:
-            await message.reply(training)
-            return
-
-    # Ignore other bots
     if message.author.bot:
         return
 
-    # Generic mention response
     if bot.user in message.mentions:
-        await message.channel.send("You tagged me! I'm alive on Railway.")
+        await message.channel.send("You tagged me! Ask me any Lightspeed question or use `distance`.")
 
     await bot.process_commands(message)
 
@@ -284,5 +283,4 @@ async def choose(ctx, *options):
     await ctx.send(f"I choose: **{random.choice(options)}**")
 
 
-# ---- Start Bot ----
 bot.run(os.getenv("DISCORD_TOKEN"))
