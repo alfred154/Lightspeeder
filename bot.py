@@ -91,13 +91,17 @@ async def on_message(message):
                 .strip()
             )
 
-            if " to " not in cleaned:
+            # MUST use " to " with spaces
+            if " to " not in cleaned.lower():
                 await message.reply("Format: `@Bot distance from LOCATION1 to LOCATION2`")
                 return
 
-            parts = cleaned.split("to")
-            loc1 = parts[0].replace("distance", "").replace("from", "").strip()
-            loc2 = parts[1].strip()
+            # Split on " to " ONLY
+            loc1, loc2 = cleaned.lower().split(" to ", 1)
+
+            # Clean up prefixes
+            loc1 = loc1.replace("distance", "").replace("from", "").strip()
+            loc2 = loc2.strip()
 
             await message.channel.typing()
 
@@ -111,7 +115,7 @@ async def on_message(message):
             mins = drive_minutes % 60
 
             await message.reply(
-                f"{loc1} to {loc2}\n"
+                f"{loc1.title()} to {loc2.title()}\n"
                 f"Distance: {straight:.1f} Miles\n"
                 f"Drive Time: {hours}h {mins:02d}min"
             )
@@ -120,6 +124,7 @@ async def on_message(message):
         except Exception as e:
             await message.reply(f"Error calculating distance: {e}")
             return
+
 
     # Ignore other bots
     if message.author.bot:
