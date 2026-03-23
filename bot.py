@@ -10,12 +10,12 @@ import aiohttp
 # -------------------------------
 
 async def geocode_location(query: str):
-    """Convert a location string into latitude/longitude using OpenStreetMap."""
     url = "https://nominatim.openstreetmap.org/search"
     params = {
         "q": query,
         "format": "json",
-        "limit": 1
+        "limit": 1,
+        "countrycodes": "us"
     }
 
     async with aiohttp.ClientSession() as session:
@@ -27,8 +27,7 @@ async def geocode_location(query: str):
 
 
 def haversine(lat1, lon1, lat2, lon2):
-    """Straight-line distance between two coordinates."""
-    R = 3958.8  # Earth radius in miles
+    R = 3958.8
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
     a = (
@@ -42,7 +41,6 @@ def haversine(lat1, lon1, lat2, lon2):
 
 
 async def get_distance_between_locations(loc1: str, loc2: str):
-    """Geocode both locations and calculate distance."""
     p1 = await geocode_location(loc1)
     p2 = await geocode_location(loc2)
 
@@ -53,8 +51,6 @@ async def get_distance_between_locations(loc1: str, loc2: str):
     lat2, lon2 = p2
 
     straight = haversine(lat1, lon1, lat2, lon2)
-
-    # Simple drive-time estimate (45 mph avg)
     drive_time_hours = straight / 45
     drive_minutes = int(drive_time_hours * 60)
 
@@ -63,10 +59,95 @@ async def get_distance_between_locations(loc1: str, loc2: str):
 
 # ---- Intents ----
 intents = discord.Intents.default()
-intents.message_content = True  # REQUIRED for reading messages
+intents.message_content = True
 
 # ---- Bot Setup ----
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+# -------------------------------
+# LIGHTSPEED HARDWARE TROUBLESHOOTING (A)
+# -------------------------------
+
+def lightspeed_hardware_response(msg):
+    msg = msg.lower()
+
+    if "printer" in msg:
+        return (
+            "**Lightspeed Printer Troubleshooting**\n"
+            "1. Make sure the printer is powered on.\n"
+            "2. Check that the Ethernet cable is firmly connected.\n"
+            "3. Ensure the printer has a solid **green** status light.\n"
+            "4. On the iPad: Settings → Wi‑Fi → ensure you're on the store network.\n"
+            "5. In Lightspeed: Settings → Hardware → Printers → tap **Search for printers**.\n"
+            "6. If still offline, power‑cycle the printer.\n"
+        )
+
+    if "scanner" in msg or "barcode" in msg:
+        return (
+            "**Lightspeed Barcode Scanner Troubleshooting**\n"
+            "1. Ensure the scanner is charged.\n"
+            "2. Hold the trigger for 10 seconds to reboot.\n"
+            "3. Make sure Bluetooth is connected to the scanner.\n"
+            "4. Test scanning into the Notes app.\n"
+            "5. If it types numbers slowly, disable keyboard mode.\n"
+        )
+
+    if "cash drawer" in msg:
+        return (
+            "**Lightspeed Cash Drawer Troubleshooting**\n"
+            "1. Drawer only opens when the receipt printer fires.\n"
+            "2. Ensure the drawer cable is plugged into the printer.\n"
+            "3. Make sure the printer is online.\n"
+            "4. Try printing a test receipt.\n"
+        )
+
+    return None
+
+
+# -------------------------------
+# LIGHTSPEED TRAINING ANSWERS (E)
+# -------------------------------
+
+def lightspeed_training_response(msg):
+    msg = msg.lower()
+
+    if "refund" in msg:
+        return (
+            "**How to Refund a Sale in Lightspeed**\n"
+            "1. Tap **Sales History**.\n"
+            "2. Select the transaction.\n"
+            "3. Tap **Refund**.\n"
+            "4. Choose the items to refund.\n"
+            "5. Complete the refund using the correct tender.\n"
+        )
+
+    if "reprint" in msg or "receipt" in msg:
+        return (
+            "**How to Reprint a Receipt**\n"
+            "1. Tap **Sales History**.\n"
+            "2. Select the sale.\n"
+            "3. Tap **Print Receipt**.\n"
+        )
+
+    if "void" in msg:
+        return (
+            "**How to Void a Sale**\n"
+            "1. Tap **Sales History**.\n"
+            "2. Select the sale.\n"
+            "3. Tap **Void Sale**.\n"
+            "4. Confirm.\n"
+        )
+
+    if "clock" in msg:
+        return (
+            "**How to Clock In/Out**\n"
+            "1. Tap **More**.\n"
+            "2. Tap **Time Clock**.\n"
+            "3. Choose **Clock In** or **Clock Out**.\n"
+        )
+
+    return None
+
 
 # ---- Events ----
 @bot.event
@@ -77,11 +158,11 @@ async def on_ready():
 @bot.event
 async def on_message(message):
 
-    # -----------------------------------------
-    # DISTANCE QUERY: "@bot distance X to Y"
-    # -----------------------------------------
     content_lower = message.content.lower()
 
+    # -----------------------------------------
+    # DISTANCE QUERY
+    # -----------------------------------------
     if bot.user in message.mentions and "distance" in content_lower:
         try:
             cleaned = (
@@ -91,15 +172,11 @@ async def on_message(message):
                 .strip()
             )
 
-            # MUST use " to " with spaces
             if " to " not in cleaned.lower():
                 await message.reply("Format: `@Bot distance from LOCATION1 to LOCATION2`")
                 return
 
-            # Split on " to " ONLY
-            loc1, loc2 = cleaned.lower().split(" to ", 1)
-
-            # Clean up prefixes
+            loc1, loc2 = cleaned.split(" to ", 1)
             loc1 = loc1.replace("distance", "").replace("from", "").strip()
             loc2 = loc2.strip()
 
@@ -125,16 +202,32 @@ async def on_message(message):
             await message.reply(f"Error calculating distance: {e}")
             return
 
+    # -----------------------------------------
+    # LIGHTSPEED HARDWARE TROUBLESHOOTING (A)
+    # -----------------------------------------
+    if bot.user in message.mentions:
+        hardware = lightspeed_hardware_response(content_lower)
+        if hardware:
+            await message.reply(hardware)
+            return
+
+    # -----------------------------------------
+    # LIGHTSPEED TRAINING ANSWERS (E)
+    # -----------------------------------------
+    if bot.user in message.mentions:
+        training = lightspeed_training_response(content_lower)
+        if training:
+            await message.reply(training)
+            return
 
     # Ignore other bots
     if message.author.bot:
         return
 
-    # If the bot is tagged normally
+    # Generic mention response
     if bot.user in message.mentions:
         await message.channel.send("You tagged me! I'm alive on Railway.")
 
-    # Allow commands to run
     await bot.process_commands(message)
 
 
