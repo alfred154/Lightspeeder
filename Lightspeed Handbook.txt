@@ -1,0 +1,632 @@
+Lightspeed Handbook
+
+Clocking In & Launching the Lightspeed POS
+
+1. Unlock the iPad
+Begin by entering the device passcode: 111111.
+
+2. Navigate to Homebase
+If not already on the Home Screen, swipe up from the bottom of the screen to return there.
+Locate and open the Homebase application.
+Enter your Homebase PIN to clock in—this is the same PIN you’ve been using on the previous Clover system.
+
+3. Launch Lightspeed POS
+Once clocked in, swipe up once more to return to the Home Screen.
+Tap the Lightspeed Retail POS app, located beside Homebase.
+
+4. Clocking Out
+At the end of your shift, repeat this process:
+Swipe up → Open Homebase → Enter your PIN → Clock out.
+
+Note:
+iPads use motion-based controls. If you’re unfamiliar with Apple devices, remember that swiping up is how you return to the Home Screen.
+
+
+
+Closing Apps on an iPad
+
+
+Open the App Switcher: From the Home screen or within an app, 
+swipe your finger up from the very bottom edge of the screen 
+and pause in the middle until the open apps appear.
+
+Swipe Up to Close: Find the app you want to close and swipe 
+its preview card upwards, off the top of the screen.
+
+Exit App Switcher: Tap an empty space on the screen or swipe 
+up from the bottom to return to the Home Screen.
+
+Logging In to Lightspeed & Accessing the Sales Screen
+
+Upon opening the Lightspeed Retail POS app, you may encounter one of two starting points:
+
+1. Sign In to Store (if prompted)
+If asked to "Sign in to your store," enter exactly:
+vapecityus
+
+This will take you to the user login screen.
+
+2. Logging In
+On the login screen, enter your email address as your username, along with your password. 
+(YOU MUST LOG IN WITH YOUR LOGIN at the beginning of each shift.) 
+
+If you do not know your Lightspeed login or password, contact:
+Savannah Matthews: (409) 599-8916 (DAY SUPPORT)          
+	
+Calvin Ochoa: (346) 702-2489 (NIGHT SUPPORT)
+
+DAEMON TOLIN - Head of Retail Systems
+Phone: 409-363-9306 
+Email: bryce@vapecity.us 
+	
+ALFRED THOMAS - Retail Systems Specialist
+Phone: 832-276-8415
+Email: alfred@vapecity.us 	
+
+PATRICIA BENNET - Retail Systems Specialist
+Phone: 346-304-0648
+Email: patriciabennett@vapecity.us 
+
+Lightspeed Login Request Form 
+https://docs.google.com/forms/d/e/1FAIpQLSc6mfVB2sjjUCLSBdDzsD8uP842IXVc1qWSE1jYgxA0U6QHag/viewform
+	
+IF YOU CAN FIND YOUR EMAIL ADDRESS and you don’t know your password, PRESS “FORGOT PASSWORD”
+
+Logging In to Lightspeed & Accessing the Sales Screen
+
+
+3. If the Store Is Already Signed In
+You may instead see a user search screen.
+Search for your name or email, select your profile, and enter your password to log in.
+If you don’t have a password, click on this link. Lightspeed Login Request Form 
+
+YOU MUST ENSURE THAT YOU ARE LOGGED INTO THE CORRECT STORE AT THE BEGINNING OF EACH SHIFT. 
+IF YOU LOG INTO THE WRONG STORE, THE SALES WILL NOT SHOW IN THE REPORTS, YOU WILL BE SELLING ANOTHER STORE’S INVENTORY, NOT YOURS, AND THE DEJAVOO WILL NOT WORK. 
+
+THE DEJAVOO WILL NOT WORK AND YOU WILL NOT SEE YOUR SALES REPORTS.
+
+4. Navigating to the Sales Screen
+Once logged in, tap the menu icon (☰) in the upper left corner and select “Sell” to begin using the POS.
+
+
+
+
+Scanning and Searching Products
+1. The "Scanner First" Rule
+To maintain 100% inventory accuracy, all products must be scanned using the barcode on the individual unit.
+Procedure: Scan the barcode on the product. 
+Verification: After scanning, look at the screen to ensure the exact product matches the physical item in your hand.
+2. Using the Global Search Bar
+If a barcode is damaged or missing, you must manually search for the item. Avoid "guessing" the item; use specific keywords to narrow the results.
+Search by SKU: If you have the SKU number or barcode number from the shelf tag or price sticker, type it directly into the search bar. This is the most accurate manual method.
+Search by Keyword: Type the Brand + Flavor + Nicotine Level.
+Example: Type "Geek Bar Pulse Blue Razz 5%" rather than just "Geek Bar."
+Avoid Generic Terms: Searching for "Disposable" or "Coil" will bring up thousands of items, increasing the risk of selecting the wrong product.
+
+
+
+
+
+More Actions
+Quick Guide: Register Actions & Commands
+To ensure our inventory and sales reporting remain accurate, 
+please follow these strict guidelines regarding the "Action" menu in Lightspeed.
+🚫 PROHIBITED ACTIONS
+Do NOT use “Create Quote”: We do not use the quote function for standard retail. This can lock inventory and create "ghost" orders.
+Do NOT use “Mark all items for fulfillment”: All items at Vape City are fulfilled at the point of sale. Using this button will cause significant errors in our fulfillment reports.
+Do NOT use “Print current sale”: There is no operational reason to use this. Only print the receipt after the payment is finalized.
+✅ PERMITTED ACTIONS
+“Discard Sale”: Use this to clear the screen if a customer changes their mind or a transaction fails.
+Note: This is the equivalent of "Deleting an Open Order" in our old Clover system.
+“Print Last Sale”: Use this if a customer requests a receipt after the transaction window has closed or if the printer jammed during the initial print.
+“Open Cash Drawer”: Use this action to open the drawer electronically without a physical key.
+
+
+
+
+Ringing Up Items & Making a Sale
+
+There are three ways to add items to a sale from the Sell screen:
+
+1. Quick Keys
+Tap the on-screen Quick Keys to instantly add common items to the cart.
+
+2. Barcode Scanner
+Use the new Zebra scanner to scan items directly into the cart.
+
+3. Manual Search (If Barcode Fails)
+If a barcode won’t scan, use the search bar to look up the item by name.
+Most products can still be found this way and should be added to the sale manually if scanning fails.
+
+4. Finalizing the Sale
+Once all items are in the cart, tap “Pay” to proceed to checkout.
+From here, select Card, Cash, or Loyalty as the payment method.
+
+Loyalty payments will be covered later in this slide show. 
+
+
+
+
+
+
+Manual Discounts
+
+If you need to add a discount manually you will touch the arrow to the left of the productin the sell screen and add the discount to the product, not the entire order. 
+
+
+
+
+
+Deals, Promo Codes & Customer Discounts
+
+Automatic Deals
+All promos (BOGO, B3G1F, etc.) apply automatically when qualifying items are in the cart. No manual input is needed.
+
+Promo Codes
+Enter on the checkout screen under “Promo code”:
+
+yelp – 25% off w/ proof of Yelp check-in (every 4 hours, not for employee use)
+google – 15% off w/ proof of Google review (one-time use)
+employee – 15% off w/ proof of Vape City employment (e.g. Discord)
+exchange - 100% for processing even exchanges.
+military - 25% off w/ proof of  ID. (if they do NOT want to be part of the loyalty program. 
+
+Customer Discounts
+25% off for military, police, first responders, etc.
+Must be in Loyalty system
+Add customer to sale → tap name → Edit Profile
+Under “Customer Group,” select Military / First Responder
+Must provide proof if not already marked as such
+
+🚫 NEVER DISCOUNTED:CBD, Delta, Kratom, Tobacco (except 50 gram shisha), Nic Pouches/Gum, Nitrous Oxide, Import Snacks, Labubu, and Enhancement products.
+
+⚠️ COMPLIANCE REMINDER
+New Customers: You MUST collect and save full name and phone number for every new customer that wants to join the loyalty program.
+Verification: Always ask for ID for Military/First Responder discounts.
+Camera: All transactions must be completed in full view of the camera.
+
+
+
+Split Payments & Partial Loyalty Use
+
+Split payments are simple and handled directly on the Pay screen.
+
+To split a payment:
+1. On the Pay screen, locate the total amount in the upper right
+2. Tap to edit the total — enter the amount for the first payment (e.g. $20 cash)
+3. Complete the first payment
+4. The remaining balance will appear for the second payment (e.g. card, loyalty, etc.)
+
+This also works for loyalty redemptions.
+
+If a customer wants to use only part of their loyalty (e.g. $5):
+1. Change the total to $5
+2. Select Loyalty as the payment method
+3. Pay the remainder with another method
+
+Note:
+No special steps are required—just edit the total and proceed as normal.
+
+
+
+Lightspeed Loyalty 
+
+How it Works:
+Customers earn $0.15 in store credit per $1.00 spent (excludes CBD, DELTA, KRATOM, NITROUS, 
+ENHANCEMENT PRODUCTS, TOBACCO).
+Loyalty = store credit (no points or thresholds). They can use any amount they’ve earned.
+At checkout, ask: “Do you have any loyalty you’d like to redeem today?”
+
+Accessing Loyalty:
+Customers must give their phone number (e.g. 555-123-4567) at the sale. (IF THEY ARE A TRANSFER FROM FIVESTARS YOU MUST ADD 1 BEFORE THEIR PHONE NUMBER TO FIND THEM!
+If they’re already in the system, you can look them up by name.
+Receipts include a QR code they can scan later to check or claim loyalty.
+
+Important Rules:
+We cannot add loyalty manually. Only phone number at checkout or QR scan works.
+Fivestars points transferred directly. If a customer believes theirs didn’t, take their name + phone number and send it to your DM who will forward it to Jeremiah Maddix.
+You must remove ANY and all discounts or promos if a customer is going to use any loyalty. 
+
+When Creating Accounts:
+1. Always enter full name
+2. Check ID before redeeming loyalty (this is not an option)
+3. Mark Police/Military/First Responders at account creation to apply discounts
+4. If two people share a number (e.g. couple), list both full names in notes
+
+FIVESTARS POINTS HAVE TRANSFERRED. If there are any issues or questions, contact: Daemon Tolin at bryce@vapecity.us / 409.363.9306 or Jeremiah Maddix at jeremiah@vapecity.us or 281.414.6995
+
+
+Lightspeed Loyalty (How to Check Loyalty or Edit Information)
+
+Step 1. Search via phone number by starting with +1 OR by name.
+(As shown in the screenshot to the right.)
+
+
+
+
+
+
+
+
+Step 2. Touch their name
+You will be able to see exactly how much loyalty credit they have accrued. 
+
+
+
+
+
+
+
+
+Step 3. Touch “edit information” to change information or add information.
+(As shown in the screenshot to the right.)
+
+
+
+
+
+Refund vs Void
+
+A void cancels a transaction as if it never happened, removing it from sales reports and returning items to inventory without reversing payments, whereas a return (refund) occurs after a sale is completed to formally process a reversal of funds and inventory. 
+
+Voids are used for immediate corrections, like adding back Loyalty, while returns manage customer transactions post-sale.
+
+Void to return Loyalty. Return to refund money to the customer. 
+
+Returning Loyalty 
+
+If you “spend” a customer’s loyalty by applying loyalty as the first of a partial payment, you will need to follow these steps. THIS WILL NOT REFUND MONEY, ONLY LOYALTY!
+
+Step 1: Complete the transaction by “paying” the rest in cash. (No money will be added to the drawer)	The drawer will open. Close it without adding or removing any cash. Keep the receipt for the Discord post 
+explaining why you voided a transaction. 
+Step 2: Tap the menu icon (☰) and touch “Sales history.”
+Step 3: Find the transaction.
+Step 4: Touch the arrow to the left of the transaction or on the transaction. 
+Step 5: Find the button and void the transaction. 
+This will reconcile the inventory.
+This will add back the loyalty that was just spent. 
+You can find the customer’s information using slide 13 to verify that the loyalty has been replaced.
+Step 6: Post a message in your store’s Discord channel explaining why you voided this transaction. Take a photo of the receipt/s. You will tag your DM and Loss Prevention.
+
+
+Refunds
+
+From the sell screen, touch the three lines (☰)  at the top left. 
+Touch Sales History
+If the customer bought the item/s and we put their name in the system, you can search by customer name or phone number. The customer should have the receipt. You can search by Receipt or Note. To limit the outlets that you are searching, touch “more filters.” Once more filters appear, you can choose the outlet where the product was purchased at and then locate the transaction. Touch the arrow on the left side of the  screen to dropdown more options. Press “Return Items.”If the customer purchased the product and we entered their name or phone number, you can enter now. If the customer didn’t tell us their name and number at the time of purchase, touch skip. The sell screen will appear with negative (-) sign before a number. This denotes that it will be refunded. Delete any product/s that are not being refunded. Once the item/s to be refunded is the only one/s left you can touch the big red “refund” button at the bottom right of the screen. Press “Pay Cash” and process the same way you would with Clover and post a photo to Discord explaining why any who approved the refund.NOTE: VOIDING A TRANSACTION WILL NOT REFUND CASH OR CREDIT/DEBIT, ONLY LOYALTY CREDIT.
+
+
+Double Charge
+
+To resolve a double charge, you must use the Refund function in Lightspeed. Please follow these steps exactly:
+Refund the Transaction: Locate the transaction in the system, expand the details, and select the Refund button.
+Confirm the Reversal: Confirm the refund. This will perform three automatic tasks:
+Return items to your physical inventory.
+Trigger a reversal for the credit card payment or cash payment.
+Document and Report: Take a photo of the screen and the receipt. Post this photo to your store’s Discord channel along with a detailed explanation of what happened and why this action was taken.
+
+
+
+Even Exchanges
+
+1. Register Entry: Scan or search for the new product the customer is receiving in the exchange. 
+Ensure the item variant (nicotine strength/flavor) is correct.
+
+2. Applying the Exchange Credit: Apply the corporate authorization code.
+Press the Promo code text at the bottom right of the sell screen.
+Enter Promo Code: exchange
+Result: This will apply a 100% discount to the item, bringing the balance to $0.00.
+
+3. Finalizing the Transaction To the transaction and record the movement of inventory:
+Select "Cash" as the payment method.
+Complete the sale as a $0.00 transaction.
+
+4. Documentation & Compliance As with all inventory adjustments, physical proof is required:
+Photograph the original defective/returned and the new item alongside the old and new receipt.
+Upload the photo immediately to your store’s designated Discord channel.
+Tag @Inventory and your DM to ensure the stock count is adjusted in the back-end.
+
+
+
+
+
+Uneven Exchanges
+
+You will perform a refund and then the customer will buy the cheaper or more Expensive product. 
+
+
+A manager should then adjust the inventory to reflect that the “returned” product isn’t available for re-sale. It should be marked as “Damage” in that store’s inventory. 
+(As shown in the screenshot below.)
+
+
+
+Reporting: 3-Hour Sales Counts
+
+Counts must be recorded every 3 hours on the dot for accuracy.
+
+Step-by-Step:
+1. From the Sell screen, tap the menu icon (☰) in the upper left
+2. Select Dashboard
+3. On the Dashboard screen, tap the menu icon again (upper left)
+4. Navigate to Reporting > Sales Reports
+5. Set the Report Filters:
+
+Report Type: Outlet
+Measure: Revenue (incl. tax)
+Date Range: Specify period → Day → Day to date
+
+The table will display:
+Your Outlet Name
+Revenue (Net Sales)
+Revenue incl. tax (Amount Collected)
+
+Late count procedures will be explained separately.
+
+
+
+
+Reporting: 3-Hour Sales Counts (IF LATE)
+
+From the sell screen, touch the three lines (☰)  at the top left. 
+Touch “Dashboard”
+Touch the “Menu” three lines (☰)  at the top left, under the original three lines (☰).
+Touch “Reporting”
+Touch “Sales Reports”Under “Report type” leave it “Sales summary”Under “Measure” select “Revenue (incl. tax)
+Under “Date range” select “Specify period”Select “Hours” and then scroll down to “Choose a range of hours” and touch the circle to the left to select it. If you need from midnight to noon you would type “12” in the field marked “Number of hours”Make sure the “Start day” is today’s date. Set the “Start time” to 12 AM. Touch “Apply”
+Select “More filters” and type the name of the store or outlet in the field that says “Add a filter”
+The numbers will appear at the bottom of the screen. 
+
+
+
+
+
+End of Day: Closing the Register
+
+1. Close the Register
+Tap the menu icon (☰) in the upper left
+Select Close Register
+When prompted, print the end-of-day report
+
+2. Review the Report (Receipt Printout)
+Ignore the “Expected” column
+Locate the “Cash to Bank” row — this is the amount to deposit into the Loomis safe
+Compare this number to the “Actual Deposit” shown on the Loomis printout:
+
+If Cash to Bank is greater → the deposit is under
+
+If Cash to Bank is less → the deposit is over
+
+
+
+
+
+
+End of Day: Opening the Register
+
+Open the Register
+Return to the same screen and select Reopen Register
+Enter the float amount (cash remaining in the drawer)
+This should be as close to $200 as possible
+ • Avoid going under 200 dollars
+ • Avoid depositing small bills
+
+
+
+
+Removing Cash to Deposit in Loomis
+
+You will use the key to unlock the drawer OR you will open the drawer using “more actions”in the sell screen. Remove cash and bring it to the Loomis the same way you always did. 
+
+
+
+Receiving Inventory
+
+Display the products immediately!An ASM, SM, or DM MUST properly receive all inventory deliveries. KEEP all inventory packing sheets and send them to your SM and ASM as well as keeping them in a safe location in the store.Inform the ASM, SM, and DM that the inventory has been delivered. 
+
+Reprinting Receipts
+
+Tap the menu icon (☰) and touch “Sales history”
+Select “More filters” and type the name of the store or outlet in the field that says “Add a filter”
+Touch “All” under “Outlet” and choose the store you are working at, or if applicable, the store where the item was purchased. 
+Find the transaction and touch the arrow on the left side. A dropdown will appear and will give you options to: 
+Return Items (DON’T SELECT THIS FOR THIS TASK)
+Edit (DON’T SELECT THIS FOR THIS TASK)
+Gift Receipt (If they want a gift receipt, press this. 
+Email Receipt (If they want the receipt emailed, press this. 
+Print Receipt (The most common and likely option for a printed receipt. 
+Void (NEVER TOUCH THIS WITHOUT EXPRESSED CONSENT BY A DM.)
+
+
+
+
+* IF the receipt that needs to be printed was the last transaction you can simple touch “More actions” in the sell screen and touch “Print last sale” for the last transactions receipt. 
+
+Lightspeed HandbookTROUBLESHOOTING / PROBLEMS
+
+Force Restart iPad
+
+
+Press and hold the Top button and one of the volume buttons until the power off slider appears on screen.
+Swipe right on the slider to reset your iPad and turn it off.
+Wait a few minutes, then turn your iPad back on.
+
+Bluetooth Issues / Scanner or Printer NOT Connected
+
+If there the scanner or printer is not connected via bluetooth, go to the bluetooth settings in the iPadand ensure that they are connected. If it says it’s disconnected, touch it and make sure it re-connects. The scanner is the device that starts with CS6080The printer is the device that starts with TM-m30III
+
+
+
+
+
+
+
+
+Bluetooth Issues Printer NOT Showing In Settings
+
+Open the top of the printer as if you were going to change the receipt paper. 
+Short tap the feed button and then press the feed button and hold it down. A QR code should print. 
+The bluetooth light should start blinking blue. 
+Go to the iPad bluetooth settings and pair the TM-m30III.
+
+
+
+
+
+
+
+
+Lightspeed Receipt Printer
+If the exclamation point light (amber) and receipt paper light (amber) are Illuminated at the same time, the printer is out of paper. The system does not work if it is out of paper. You MUST keep paper in the printer. 
+
+
+
+
+
+
+Lightspeed Receipt Printer (Turning on Bluetooth)
+If you cannot find the TM-m30III in the Bluetooth settings of the iPad you need to perform these steps to turn on the Bluetooth so the iPad can find it.
+
+
+
+
+
+
+Dejavoo P1
+
+
+Dejavoo P1 Setup with Lightspeed
+
+
+
+
+
+
+
+
+
+
+
+https://drive.google.com/file/d/1YNZVWy0rSYN97TvJQpkZOHq3b9vekFvY/view?usp=sharing 
+
+
+Dejavoo P1 Technical Troubleshooting
+If the terminal becomes unresponsive or experiences connectivity issues, perform a hard reboot:
+Locate Power: The power button is located on the left side of the terminal.
+Reboot: Power the device off and back on.
+Launch Software: We use the DVpaylite App. If the application does not launch automatically after the reboot, manually touch the app icon on the home screen to start it.
+Note: Always interact with the Dejavoo software slowly and deliberately. Rapid inputs can cause the application to lag or crash. DO NOT KEEP THE CREDIT CARD TERMINAL WHERE THE CUSTOMER CAN ACCESS IT BEFORE YOU ARE READY. Once the Dejavoo displays their total amount, then you may present the customer with the device to scan, tap, or insert.
+IF THE PAYMENT GOES THROUGH ON THE DEJAVOO, BUT NOT ON THE LIGHTSPEED. Press “Dejavoo Error” to have the Lightspeed accept the payment. 
+NEVER refund a “Dejavoo Error.” This does NOT actually refund money to a credit card or debit card. 
+You can refund using the Dejavoo terminal if required. DO NOT press Dejavoo Error unless you are sure that the credit card was charged using the Dejavoo terminal.
+
+
+
+
+Dejavoo P1
+
+Use these steps if a customer cannot complete a partial payment, or if a payment method (Loyalty, Store Credit, etc.) was selected by mistake.
+
+IMPORTANT: DO NOT delete any products from the original sell screen.
+
+Phase 1: Closing the "Ghost" Transaction
+To clear the screen and prepare for a void, you must first "complete" the sale in the system.
+Select the "Cash" Payment Option: On the payment breakdown screen, select Cash for the remaining balance.
+Finalize the Sale: Complete the transaction as if cash were received. Important: Do not actually add or remove any physical money from the cash drawer. This step is only to move the sale into the system history so it can be corrected.
+
+Phase 2: Correcting Inventory & Payments
+Once the sales screen has reset to its normal state, you must immediately void the transaction to make sure the inventory and financial records are accurate.
+Access Sales History: Tap the Menu icon (three horizontal lines) in the top left and select Sales History.
+
+Locate the Transaction: Find the specific sale you just completed at the top of the list.
+Prepare to Void: Tap the transaction line to expand the details. Scroll to the bottom right and select the Void button.
+Confirm Reversal: Confirm the void. This action automatically performs three important tasks:
+This returns the items to your physical inventory.
+Corrects / replaces any Loyalty Points or Store Credit used.
+Triggers a reversal for any Credit Card partial payments.
+Take a photo of the screen and receipt and post this to your store’s Discord channel. Write a detailed explanation describing what happened and why this course of action was taken. 
+
+Dejavoo P1 (Not Working - Wrong Store)
+
+
+
+
+IF YOU ARE LOGGED INTO THE WRONG STORE, THE DEJAVOO WILL NOT WORK AND YOU WILL NOT BE ABLE TO ACCESS YOUR STORE’S SALES NUMBERS BECAUSE THEY WERE LOGGED IN AS ANOTHER STORE. 
+
+
+
+Step-by-step instructions for logging out of a store and back into the correct store are on the next page. 
+
+
+
+
+Dejavoo P1 (Dejavoo Error Payment) 
+
+Occasionally, a customer may tap or insert their card too quickly.
+ In these cases, the terminal (card reader) processes the payment, 
+but Lightspeed remains stuck on the payment screen.
+If that happens:
+*Do not guess. Do not hit random buttons.*
+Incorrect actions can result in *double charges* or *lost revenue* for the store.
+
+Follow These Steps Exactly
+1. Print the small receipt from the Dejavoo terminal.
+This confirms the customer was actually charged.
+If you skip this, there’s no proof of payment and 
+the product  could walk out unpaid.
+2. Only after confirming payment, select “Dejavoo Error” 
+in Lightspeed to complete the transaction.
+3. After the sale is finalized:
+    📸 Take a photo of:
+     • The *Lightspeed receipt*, and
+     • The *Dejavoo receipt*
+
+4. Post both images in your store’s Discord channel.
+Tag *@accounting* and *@lightspeed* for reporting.
+
+🚨 This is not optional.
+Skipping any of these steps can result in loss and will lead to disciplinary action.
+Thanks for handling this correctly and keeping operations smooth.
+
+Logged into the Wrong Store 
+
+IF you are logged into the wrong store you will need to:
+
+Step 1. Touch your login name at the top right of the screen.
+
+
+
+
+Step 2. Touch “Sign out”
+
+
+
+Step 3: Touch “Exit Store”
+
+
+Step 4: Type “vapecityus”
+
+
+Logged into the Wrong Store 
+
+IF you are logged into the wrong store you will need to:
+
+
+Step 5: Touch Next
+
+Step 6: Sign in using your email address and password. 
+
+Step 7: Choose the correct store. 
+
+The store report should start showing revenue and the Dejavoo should start working normally. 
+
+
+Manager Handbook
+
+
+
+See the manager linktree and the DM linktree
+
+
+
+
+
