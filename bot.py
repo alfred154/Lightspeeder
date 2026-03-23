@@ -4,16 +4,41 @@ import discord
 from discord.ext import commands
 import math
 import aiohttp
+import re
+from difflib import SequenceMatcher
 
-# -------------------------------
-# LOAD & PARSE LIGHTSPEED HANDBOOK
-# -------------------------------
+# ============================================================
+#  GLOBALS
+# ============================================================
 
 HANDBOOK_SECTIONS = {}
+USER_SESSIONS = {}  # per-user troubleshooting sessions
+
+HARDWARE_KEYWORDS = {
+    "printer": ["printer", "receipt printer", "print", "printing", "printer offline", "printer not working"],
+    "scanner": ["scanner", "barcode", "scan", "barcode scanner", "scanner not working"],
+    "drawer": ["drawer", "cash drawer", "drawer stuck", "drawer not opening"],
+    "dejavoo": ["dejavoo", "terminal", "card reader", "pin pad"]
+}
+
+ESCALATION_CONTACTS = """
+If the issue is still not resolved, contact support:
+
+Savannah (Day Support): 409‑599‑8916
+Calvin (Night Support): 346‑702‑2489
+Daemon (Head of Retail Systems): 409‑363‑9306
+Alfred (Retail Systems Specialist): 832‑276‑8415
+Patricia (Retail Systems Specialist): 346‑304‑0648
+"""
+
+# ============================================================
+#  HANDBOOK LOADING & SECTION PARSING
+# ============================================================
 
 def load_handbook():
     global HANDBOOK_SECTIONS
     filename = "Lightspeed_Handbook.txt"
+
     if not os.path.exists(filename):
         print("Handbook file not found:", filename)
         HANDBOOK_SECTIONS = {}
@@ -30,20 +55,31 @@ def load_handbook():
         line = line.strip()
         if not line:
             return False
-        if len(line) > 80:
+        if line[0].isdigit():
             return False
-        if any(line.startswith(ch) for ch in ("1.", "2.", "3.", "-", "*")):
+        if line.startswith("-") or line.startswith("*"):
+            return False
+        if "http" in line:
+            return False
+        if "@" in line:
+            return False
+        if len(line) > 100:
             return False
         if "." in line:
             return False
-        # treat as header if it has letters and spaces, no @ or :
-        if any(c.isalpha() for c in line) and all(c.isalnum() or c.isspace() or c in "&/" for c in line):
+
+        words = line.split()
+        if len(words) < 2:
+            return False
+
+        capitalized_words = sum(1 for w in words if w[0].isupper())
+        if capitalized_words >= len(words) * 0.6:
             return True
+
         return False
 
     for line in lines:
         if is_header(line):
-            # save previous section
             if current_title and current_lines:
                 sections[current_title.lower()] = "\n".join(current_lines).strip()
             current_title = line.strip()
@@ -58,21 +94,31 @@ def load_handbook():
     HANDBOOK_SECTIONS = sections
     print(f"Loaded {len(HANDBOOK_SECTIONS)} handbook sections.")
 
-def score_section(query: str, title: str, body: str) -> int:
-    q_words = [w for w in query.lower().split() if len(w) > 2]
-    text = (title + " " + body).lower()
+# ============================================================
+#  FUZZY MATCHING
+# ============================================================
+
+def fuzzy_ratio(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+def score_section(query: str, title: str, body: str) -> float:
+    q = query.lower()
+    t = title.lower()
+    b = body.lower()
+
     score = 0
-    for w in q_words:
-        if w in text:
-            score += 2
-        if w in title.lower():
+
+    score += fuzzy_ratio(q, t) * 5
+
+    for word in q.split():
+        if word in t:
             score += 3
+        if word in b:
+            score += 1
+
     return score
 
-def find_best_handbook_answer(query: str):
-    if not HANDBOOK_SECTIONS:
-        return None
-
+def find_best_section(query: str):
     best_title = None
     best_body = None
     best_score = 0
@@ -84,28 +130,103 @@ def find_best_handbook_answer(query: str):
             best_title = title
             best_body = body
 
-    if best_score == 0 or not best_body:
+    if best_score < 0.2:
+        return None, None
+
+    return best_title, best_body
+
+# ============================================================
+#  HARDWARE DETECTION
+# ============================================================
+
+def detect_hardware_category(query: str):
+    q = query.lower()
+    for category, keywords in HARDWARE_KEYWORDS.items():
+        for kw in keywords:
+            if fuzzy_ratio(q, kw) > 0.6 or kw in q:
+                return category
+    return None
+
+# ============================================================
+#  STEP EXTRACTION
+# ============================================================
+
+def extract_steps(text: str):
+    steps = re.findall(r"\d+\.\s.*", text)
+    return steps
+
+def fallback_steps(category):
+    if category == "printer":
+        return [
+            "Check if the printer has a solid green light.",
+            "Ensure the Ethernet cable is firmly connected.",
+            "Verify the iPad is on the correct WiFi.",
+            "Open Lightspeed → Settings → Hardware → Search for printer.",
+            "Power cycle the printer.",
+            "Restart the iPad."
+        ]
+    if category == "scanner":
+        return [
+            "Ensure the scanner is charged.",
+            "Restart the scanner.",
+            "Check Bluetooth connection.",
+            "Try scanning a known good barcode.",
+            "Toggle keyboard mode on the scanner."
+        ]
+    if category == "drawer":
+        return [
+            "Ensure the printer is online (drawer depends on printer).",
+            "Check the drawer cable connected to the printer.",
+            "Perform a test print.",
+            "Power cycle the drawer and printer."
+        ]
+    if category == "dejavoo":
+        return [
+            "Ensure the terminal is powered on.",
+            "Check the network connection.",
+            "Restart the terminal.",
+            "Verify Lightspeed is paired with the terminal.",
+            "Run a test transaction."
+        ]
+    return ["No steps available."]
+
+# ============================================================
+#  TROUBLESHOOTING SESSION MANAGEMENT
+# ============================================================
+
+def start_session(user_id, category, steps):
+    USER_SESSIONS[user_id] = {
+        "category": category,
+        "steps": steps,
+        "index": 0
+    }
+
+def get_session(user_id):
+    return USER_SESSIONS.get(user_id)
+
+def advance_session(user_id):
+    session = USER_SESSIONS.get(user_id)
+    if not session:
         return None
 
-    # trim long responses a bit
-    if len(best_body) > 1200:
-        best_body = best_body[:1200] + "\n\n...(truncated)..."
+    session["index"] += 1
+    if session["index"] >= len(session["steps"]):
+        del USER_SESSIONS[user_id]
+        return "done"
 
-    return f"**{best_title.title()}**\n\n{best_body}"
+    return session["steps"][session["index"]]
 
+def stop_session(user_id):
+    if user_id in USER_SESSIONS:
+        del USER_SESSIONS[user_id]
 
-# -------------------------------
-# LOCATION / DISTANCE UTILITIES
-# -------------------------------
+# ============================================================
+#  DISTANCE TOOL
+# ============================================================
 
 async def geocode_location(query: str):
     url = "https://nominatim.openstreetmap.org/search"
-    params = {
-        "q": query,
-        "format": "json",
-        "limit": 1,
-        "countrycodes": "us"
-    }
+    params = {"q": query, "format": "json", "limit": 1, "countrycodes": "us"}
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url, params=params, headers={"User-Agent": "LightspeederBot"}) as resp:
@@ -114,25 +235,22 @@ async def geocode_location(query: str):
                 return None
             return float(data[0]["lat"]), float(data[0]["lon"])
 
-
 def haversine(lat1, lon1, lat2, lon2):
     R = 3958.8
     dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lat2 - lon1)
+    dlon = math.radians(lon2 - lon1)
     a = (
-        math.sin(dlat / 2) ** 2 +
+        math.sin(dlat/2)**2 +
         math.cos(math.radians(lat1)) *
         math.cos(math.radians(lat2)) *
-        math.sin(dlon / 2) ** 2
+        math.sin(dlon/2)**2
     )
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     return R * c
 
-
-async def get_distance_between_locations(loc1: str, loc2: str):
+async def get_distance_between_locations(loc1, loc2):
     p1 = await geocode_location(loc1)
     p2 = await geocode_location(loc2)
-
     if not p1 or not p2:
         return None, None, None, None
 
@@ -145,27 +263,88 @@ async def get_distance_between_locations(loc1: str, loc2: str):
 
     return straight, drive_minutes, p1, p2
 
+# ============================================================
+#  DISCORD BOT SETUP
+# ============================================================
 
-# ---- Intents ----
 intents = discord.Intents.default()
 intents.message_content = True
-
-# ---- Bot Setup ----
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# ============================================================
+#  HELP MENU
+# ============================================================
+
+HELP_TEXT = """
+**Lightspeeder Help Menu**
+
+**Ask any Lightspeed question:**
+@bot how do I clock in
+@bot how do I search products
+@bot how do I log in
+
+**Start hardware troubleshooting:**
+@bot printer not working
+@bot scanner not scanning
+@bot cash drawer stuck
+@bot dejavoo not connecting
+
+**During troubleshooting:**
+Say **next** to continue
+Say **stop** to cancel
+
+**Distance tool:**
+@bot distance from Houston to Dallas
+
+**Escalation Contacts:**
+""" + ESCALATION_CONTACTS
+
+# ============================================================
+#  BOT EVENTS
+# ============================================================
 
 @bot.event
 async def on_ready():
     print(f"Lightspeeder bot online as {bot.user}")
     load_handbook()
 
-
 @bot.event
 async def on_message(message):
-    content_lower = message.content.lower()
+    if message.author.bot:
+        return
 
-    # DISTANCE QUERY
-    if bot.user in message.mentions and "distance" in content_lower:
+    content = message.content.lower()
+    user_id = message.author.id
+
+    # -----------------------------
+    # HELP MENU
+    # -----------------------------
+    if bot.user in message.mentions and "help" in content:
+        await message.reply(HELP_TEXT)
+        return
+
+    # -----------------------------
+    # ACTIVE TROUBLESHOOTING SESSION
+    # -----------------------------
+    session = get_session(user_id)
+    if session:
+        if content.strip() == "next":
+            next_step = advance_session(user_id)
+            if next_step == "done":
+                await message.reply("All steps completed.\n\n" + ESCALATION_CONTACTS)
+            else:
+                await message.reply(f"**Step {session['index']+1}/{len(session['steps'])}:**\n{next_step}")
+            return
+
+        if content.strip() == "stop":
+            stop_session(user_id)
+            await message.reply("Troubleshooting cancelled.")
+            return
+
+    # -----------------------------
+    # DISTANCE TOOL
+    # -----------------------------
+    if bot.user in message.mentions and "distance" in content:
         try:
             cleaned = (
                 message.content
@@ -174,7 +353,7 @@ async def on_message(message):
                 .strip()
             )
 
-            if " to " not in cleaned.lower():
+            if " to " not in cleaned:
                 await message.reply("Format: `@Bot distance from LOCATION1 to LOCATION2`")
                 return
 
@@ -185,7 +364,6 @@ async def on_message(message):
             await message.channel.typing()
 
             straight, drive_minutes, p1, p2 = await get_distance_between_locations(loc1, loc2)
-
             if straight is None:
                 await message.reply("I couldn't find one of those locations.")
                 return
@@ -204,8 +382,10 @@ async def on_message(message):
             await message.reply(f"Error calculating distance: {e}")
             return
 
-    # LIGHTSPEED Q&A (any question from handbook)
-    if bot.user in message.mentions and "distance" not in content_lower:
+    # -----------------------------
+    # LIGHTSPEED Q&A + TROUBLESHOOTING
+    # -----------------------------
+    if bot.user in message.mentions:
         query = (
             message.content
             .replace(f'<@{bot.user.id}>', '')
@@ -213,24 +393,41 @@ async def on_message(message):
             .strip()
         )
 
-        answer = find_best_handbook_answer(query)
-        if answer:
-            await message.reply(answer)
-            return
-        else:
-            await message.reply("I couldn't find anything in the Lightspeed handbook for that question.")
+        # Detect hardware category
+        category = detect_hardware_category(query)
+
+        # If hardware → multi-step troubleshooting
+        if category:
+            title, body = find_best_section(query)
+            steps = extract_steps(body) if body else []
+
+            if not steps:
+                steps = fallback_steps(category)
+
+            start_session(user_id, category, steps)
+
+            await message.reply(
+                f"**{category.title()} Troubleshooting — Step 1/{len(steps)}**\n{steps[0]}\n\n"
+                "Say **next** when done or **stop** to cancel."
+            )
             return
 
-    if message.author.bot:
+        # Otherwise → normal Q&A
+        title, body = find_best_section(query)
+        if title and body:
+            if len(body) > 1500:
+                body = body[:1500] + "\n\n...(truncated)..."
+            await message.reply(f"**{title.title()}**\n\n{body}")
+            return
+
+        await message.reply("I couldn't find anything in the Lightspeed handbook for that question.")
         return
-
-    if bot.user in message.mentions:
-        await message.channel.send("You tagged me! Ask me any Lightspeed question or use `distance`.")
 
     await bot.process_commands(message)
 
-
-# ---- Basic Commands ----
+# ============================================================
+#  BASIC COMMANDS
+# ============================================================
 
 @bot.command()
 async def ping(ctx):
@@ -248,8 +445,9 @@ async def add(ctx, a: int, b: int):
 async def info(ctx):
     await ctx.send(f"I'm online and running on Railway as {bot.user}!")
 
-
-# ---- Fun Commands ----
+# ============================================================
+#  FUN COMMANDS
+# ============================================================
 
 @bot.command()
 async def eightball(ctx, *, question: str):
@@ -260,11 +458,9 @@ async def eightball(ctx, *, question: str):
     ]
     await ctx.send(f"🎱 {random.choice(responses)}")
 
-
 @bot.command()
 async def coinflip(ctx):
     await ctx.send(f"🪙 {random.choice(['Heads', 'Tails'])}")
-
 
 @bot.command()
 async def roll(ctx, sides: int = 6):
@@ -274,7 +470,6 @@ async def roll(ctx, sides: int = 6):
     result = random.randint(1, sides)
     await ctx.send(f"🎲 You rolled a **{result}** on a {sides}-sided die.")
 
-
 @bot.command()
 async def choose(ctx, *options):
     if len(options) < 2:
@@ -282,5 +477,8 @@ async def choose(ctx, *options):
         return
     await ctx.send(f"I choose: **{random.choice(options)}**")
 
+# ============================================================
+#  RUN BOT
+# ============================================================
 
 bot.run(os.getenv("DISCORD_TOKEN"))
