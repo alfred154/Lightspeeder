@@ -11,7 +11,8 @@ from difflib import SequenceMatcher
 #  GLOBALS
 # ============================================================
 
-HANDBOOK_SECTIONS = {}
+# Each entry: {"title": str, "body": str, "source": "employee" or "manager"}
+HANDBOOK_SECTIONS = []
 USER_SESSIONS = {}  # per-user troubleshooting sessions
 
 HARDWARE_KEYWORDS = {
@@ -31,54 +32,70 @@ Alfred (Retail Systems Specialist): 832‑276‑8415
 Patricia (Retail Systems Specialist): 346‑304‑0648
 """
 
+MANAGER_KEYWORDS = [
+    "manager",
+    "override",
+    "approval",
+    "discount",
+    "void",
+    "end of day",
+    "closeout",
+    "close out",
+    "manager refund",
+    "manager login",
+    "manager mode",
+    "manager permissions",
+    "manager override"
+]
+
 # ============================================================
 #  HANDBOOK LOADING & SECTION PARSING
 # ============================================================
 
-def load_handbook():
-    global HANDBOOK_SECTIONS
-    filename = "Lightspeed_Handbook.txt"
+def is_header(line: str) -> bool:
+    line = line.strip()
+    if not line:
+        return False
+    if line[0].isdigit():
+        return False
+    if line.startswith("-") or line.startswith("*"):
+        return False
+    if "http" in line:
+        return False
+    if "@" in line:
+        return False
+    if len(line) > 100:
+        return False
+    if "." in line:
+        return False
 
+    words = line.split()
+    if len(words) < 2:
+        return False
+
+    capitalized_words = sum(1 for w in words if w[0].isupper())
+    return capitalized_words >= len(words) * 0.6
+
+def load_file_sections(filename: str, source: str):
     if not os.path.exists(filename):
-        print("Handbook file not found:", filename)
-        HANDBOOK_SECTIONS = {}
-        return
+        print(f"Handbook file not found: {filename}")
+        return []
 
     with open(filename, "r", encoding="utf-8") as f:
         lines = f.read().splitlines()
 
-    sections = {}
+    sections = []
     current_title = None
     current_lines = []
-
-    def is_header(line: str) -> bool:
-        line = line.strip()
-        if not line:
-            return False
-        if line[0].isdigit():
-            return False
-        if line.startswith("-") or line.startswith("*"):
-            return False
-        if "http" in line:
-            return False
-        if "@" in line:
-            return False
-        if len(line) > 100:
-            return False
-        if "." in line:
-            return False
-
-        words = line.split()
-        if len(words) < 2:
-            return False
-
-        capitalized_words = sum(1 for w in words if w[0].isupper())
-        return capitalized_words >= len(words) * 0.6
 
     for line in lines:
         if is_header(line):
             if current_title and current_lines:
-                sections[current_title.lower()] = "\n".join(current_lines).strip()
+                sections.append({
+                    "title": current_title.strip(),
+                    "body": "\n".join(current_lines).strip(),
+                    "source": source
+                })
             current_title = line.strip()
             current_lines = []
         else:
@@ -86,13 +103,29 @@ def load_handbook():
                 current_lines.append(line)
 
     if current_title and current_lines:
-        sections[current_title.lower()] = "\n".join(current_lines).strip()
+        sections.append({
+            "title": current_title.strip(),
+            "body": "\n".join(current_lines).strip(),
+            "source": source
+        })
 
-    HANDBOOK_SECTIONS = sections
-    print(f"Loaded {len(HANDBOOK_SECTIONS)} handbook sections.")
+    print(f"Loaded {len(sections)} sections from {filename} ({source}).")
+    return sections
+
+def load_handbook():
+    global HANDBOOK_SECTIONS
+    HANDBOOK_SECTIONS = []
+
+    # Employee handbook
+    HANDBOOK_SECTIONS.extend(load_file_sections("Lightspeed_Handbook.txt", "employee"))
+
+    # Manager handbook
+    HANDBOOK_SECTIONS.extend(load_file_sections("Manager Lightspeed Handbook.txt", "manager"))
+
+    print(f"Total sections loaded: {len(HANDBOOK_SECTIONS)}")
 
 # ============================================================
-#  FUZZY MATCHING
+#  FUZZY MATCHING & SECTION SELECTION
 # ============================================================
 
 def fuzzy_ratio(a, b):
@@ -114,22 +147,74 @@ def score_section(query: str, title: str, body: str) -> float:
 
     return score
 
-def find_best_section(query: str):
-    best_title = None
-    best_body = None
-    best_score = 0
+def is_manager_query(query: str) -> bool:
+    q = query.lower()
+    return any(k in q for k in MANAGER_KEYWORDS)
 
-    for title, body in HANDBOOK_SECTIONS.items():
+def find_best_sections(query: str):
+    best_employee = None
+    best_employee_score = 0
+    best_manager = None
+    best_manager_score = 0
+
+    for entry in HANDBOOK_SECTIONS:
+        title = entry["title"]
+        body = entry["body"]
+        source = entry["source"]
+
         s = score_section(query, title, body)
-        if s > best_score:
-            best_score = s
-            best_title = title
-            best_body = body
+        if source == "employee":
+            if s > best_employee_score:
+                best_employee_score = s
+                best_employee = entry
+        else:
+            if s > best_manager_score:
+                best_manager_score = s
+                best_manager = entry
 
-    if best_score < 0.2:
-        return None, None
+    # If both are extremely low, treat as no match
+    if best_employee_score < 0.2:
+        best_employee = None
+    if best_manager_score < 0.2:
+        best_manager = None
 
-    return best_title, best_body
+    return best_employee, best_manager
+
+def format_merged_answer(query: str, employee_entry, manager_entry):
+    # Employee first, then Manager (Advanced)
+    # Title preference: manager title if exists, else employee
+    title = None
+    if manager_entry:
+        title = manager_entry["title"]
+    elif employee_entry:
+        title = employee_entry["title"]
+    else:
+        title = "Lightspeed Information"
+
+    parts = [f"**{title}**\n"]
+
+    if employee_entry:
+        body = employee_entry["body"]
+        if len(body) > 1500:
+            body = body[:1500] + "\n\n...(truncated)..."
+        parts.append("**Employee Instructions:**\n" + body + "\n")
+
+    if manager_entry:
+        body = manager_entry["body"]
+        if len(body) > 1500:
+            body = body[:1500] + "\n\n...(truncated)..."
+        parts.append("---\n**Manager Instructions (Advanced):**\n" + body)
+
+    return "\n".join(parts).strip()
+
+def format_single_answer(entry):
+    if not entry:
+        return None
+    title = entry["title"]
+    body = entry["body"]
+    if len(body) > 1500:
+        body = body[:1500] + "\n\n...(truncated)..."
+    return f"**{title}**\n\n{body}"
 
 # ============================================================
 #  HARDWARE DETECTION
@@ -291,8 +376,13 @@ Say **stop** to cancel
 """ + ESCALATION_CONTACTS
 
 # ============================================================
-#  ON_MESSAGE (HYBRID TROUBLESHOOTING LOGIC)
+#  BOT EVENTS
 # ============================================================
+
+@bot.event
+async def on_ready():
+    print(f"Lightspeeder bot online as {bot.user}")
+    load_handbook()
 
 @bot.event
 async def on_message(message):
@@ -307,10 +397,9 @@ async def on_message(message):
         await message.reply(HELP_TEXT)
         return
 
-    # ACTIVE TROUBLESHOOTING SESSION
+    # ACTIVE TROUBLESHOOTING SESSION (HYBRID MODE)
     session = get_session(user_id)
     if session:
-
         # Flow control
         if content.strip() == "next":
             next_step = advance_session(user_id)
@@ -341,15 +430,23 @@ async def on_message(message):
             return "?" in text or any(text.startswith(q) for q in ["how", "what", "why", "where", "when"])
 
         if is_question(content):
-            title, body = find_best_section(content)
-            if title and body:
-                if len(body) > 1500:
-                    body = body[:1500] + "\n\n...(truncated)..."
-                await message.reply(
-                    f"**{title.title()}**\n\n{body}\n\n"
-                    f"You're still in **{session['category']} troubleshooting** — say **next** to continue."
-                )
-                return
+            emp, mgr = find_best_sections(content)
+            if emp or mgr:
+                answer = None
+                if is_manager_query(content) and (emp or mgr):
+                    answer = format_merged_answer(content, emp, mgr)
+                else:
+                    # Prefer employee if not explicitly manager-level
+                    if emp:
+                        answer = format_single_answer(emp)
+                    elif mgr:
+                        answer = format_single_answer(mgr)
+
+                if answer:
+                    await message.reply(
+                        f"{answer}\n\nYou're still in **{session['category']} troubleshooting** — say **next** to continue."
+                    )
+                    return
 
             await message.reply(
                 "I couldn't find anything in the handbook for that question.\n\n"
@@ -358,15 +455,22 @@ async def on_message(message):
             return
 
         # Other messages → normal Q&A + reminder
-        title, body = find_best_section(content)
-        if title and body:
-            if len(body) > 1500:
-                body = body[:1500] + "\n\n...(truncated)..."
-            await message.reply(
-                f"**{title.title()}**\n\n{body}\n\n"
-                f"You're still in **{session['category']} troubleshooting** — say **next** to continue."
-            )
-            return
+        emp, mgr = find_best_sections(content)
+        if emp or mgr:
+            answer = None
+            if is_manager_query(content) and (emp or mgr):
+                answer = format_merged_answer(content, emp, mgr)
+            else:
+                if emp:
+                    answer = format_single_answer(emp)
+                elif mgr:
+                    answer = format_single_answer(mgr)
+
+            if answer:
+                await message.reply(
+                    f"{answer}\n\nYou're still in **{session['category']} troubleshooting** — say **next** to continue."
+                )
+                return
 
         await message.reply(
             f"You're still in **{session['category']} troubleshooting** — say **next** to continue or **stop** to cancel."
@@ -412,7 +516,7 @@ async def on_message(message):
             await message.reply(f"Error calculating distance: {e}")
             return
 
-    # NEW QUESTION OR TROUBLESHOOTING
+    # NEW LIGHTSPEED QUESTION OR TROUBLESHOOTING
     if bot.user in message.mentions:
         query = (
             message.content
@@ -421,11 +525,20 @@ async def on_message(message):
             .strip()
         )
 
+        # Detect hardware category
         category = detect_hardware_category(query)
 
+        # Hardware → start troubleshooting
         if category:
-            title, body = find_best_section(query)
-            steps = extract_steps(body) if body else []
+            emp, mgr = find_best_sections(query)
+            # For troubleshooting, prefer manager steps if available
+            chosen_body = None
+            if mgr:
+                chosen_body = mgr["body"]
+            elif emp:
+                chosen_body = emp["body"]
+
+            steps = extract_steps(chosen_body) if chosen_body else []
             if not steps:
                 steps = fallback_steps(category)
 
@@ -437,12 +550,22 @@ async def on_message(message):
             )
             return
 
-        title, body = find_best_section(query)
-        if title and body:
-            if len(body) > 1500:
-                body = body[:1500] + "\n\n...(truncated)..."
-            await message.reply(f"**{title.title()}**\n\n{body}")
-            return
+        # Normal Q&A
+        emp, mgr = find_best_sections(query)
+        if emp or mgr:
+            if is_manager_query(query) and (emp or mgr):
+                answer = format_merged_answer(query, emp, mgr)
+            else:
+                if emp:
+                    answer = format_single_answer(emp)
+                elif mgr:
+                    answer = format_single_answer(mgr)
+                else:
+                    answer = None
+
+            if answer:
+                await message.reply(answer)
+                return
 
         await message.reply("I couldn't find anything in the Lightspeed handbook for that question.")
         return
